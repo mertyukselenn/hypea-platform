@@ -73,7 +73,7 @@ TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR"
 
 # Download the main installation script
-curl -fsSL https://raw.githubusercontent.com/your-username/hypea-platform/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/mertyukselenn/hypea-platform/main/install.sh -o install.sh
 
 # Make it executable
 chmod +x install.sh

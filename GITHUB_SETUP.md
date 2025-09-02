@@ -23,7 +23,7 @@ git add .
 git commit -m "🎉 Initial commit - Hypea Platform"
 
 # GitHub repository'sini remote olarak ekleyin
-git remote add origin https://github.com/YOUR_USERNAME/hypea-platform.git
+git remote add origin https://github.com/mertyukselenn/hypea-platform.git
 
 # Ana branch'i main olarak ayarlayın
 git branch -M main
@@ -69,13 +69,13 @@ GitHub Container Registry kullanmak için:
 
 **Yöntem 1: Direct Installation**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USERNAME/hypea-platform/main/quick-install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mertyukselenn/hypea-platform/main/quick-install.sh | bash
 ```
 
 **Yöntem 2: Docker ile Kurulum**
 ```bash
 # Repository'yi klonlayın
-git clone https://github.com/YOUR_USERNAME/hypea-platform.git
+git clone https://github.com/mertyukselenn/hypea-platform.git
 cd hypea-platform
 
 # Environment dosyasını kopyalayın
@@ -88,7 +88,7 @@ docker-compose up -d
 **Yöntem 3: Manuel Kurulum**
 ```bash
 # Repository'yi klonlayın
-git clone https://github.com/YOUR_USERNAME/hypea-platform.git
+git clone https://github.com/mertyukselenn/hypea-platform.git
 cd hypea-platform
 
 # Kurulum scriptini çalıştırın

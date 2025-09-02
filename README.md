@@ -80,12 +80,12 @@ A modern, production-ready platform combining community management with e-commer
 
 **Method 1: Direct Installation**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/your-username/hypea-platform/main/quick-install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mertyukselenn/hypea-platform/main/quick-install.sh | bash
 ```
 
 **Method 2: Docker Installation**
 ```bash
-git clone https://github.com/your-username/hypea-platform.git
+git clone https://github.com/mertyukselenn/hypea-platform.git
 cd hypea-platform
 cp env.docker .env
 docker-compose up -d
@@ -104,7 +104,7 @@ docker-compose up -d
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/hypea-platform.git
+   git clone https://github.com/mertyukselenn/hypea-platform.git
    cd hypea-platform
    ```
 
@@ -350,7 +350,7 @@ CMD ["npm", "start"]
 2. **Deploy Application:**
    ```bash
    # Clone repository
-   git clone https://github.com/your-username/hypea-platform.git
+   git clone https://github.com/mertyukselenn/hypea-platform.git
    cd hypea-platform
    
    # Install dependencies
@@ -502,5 +502,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Made with ❤️ by the Hypea Team**
-#   h y p e a - p l a t f o r m  
+#   h y p e a - p l a t f o r m 
+ 
  

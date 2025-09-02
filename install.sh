@@ -161,7 +161,7 @@ clone_repository() {
         rm -rf hypea-platform
     fi
     
-    git clone https://github.com/your-username/hypea-platform.git
+    git clone https://github.com/mertyukselenn/hypea-platform.git
     cd hypea-platform
     
     log "Repository cloned successfully"
