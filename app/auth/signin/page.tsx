@@ -11,7 +11,7 @@ import { GlassCard } from "@/components/ui/glass-card"
 import { LoadingSpinner } from "@/components/ui/loading"
 import { useToast } from "@/components/ui/use-toast"
 import { Eye, EyeOff, Mail, Lock, Github } from "lucide-react"
-import { motion } from "framer-motion"
+// import { motion } from "framer-motion" // Disabled for server compatibility
 
 export default function SignInPage() {
   const [email, setEmail] = useState("")
@@ -111,11 +111,7 @@ export default function SignInPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
       <div className="w-full max-w-md space-y-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <div>
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold gradient-text">Welcome Back</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-2">
@@ -210,20 +206,15 @@ export default function SignInPage() {
             </Button>
           </GlassCard>
 
-          <motion.div 
-            className="text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
+          <div className="text-center">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
               <Link href="/auth/signup" className="text-primary hover:underline">
                 Sign up
               </Link>
             </p>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
     </div>
   )

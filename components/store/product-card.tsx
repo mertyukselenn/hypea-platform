@@ -14,7 +14,7 @@ import {
   Users
 } from "lucide-react"
 import { formatPrice } from "@/lib/utils"
-import { motion } from "framer-motion"
+// import { motion } from "framer-motion" // Disabled for server compatibility
 
 interface Product {
   id: string
@@ -72,10 +72,7 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
   }
 
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.2 }}
-    >
+    <div>
       <GlassCard className={`overflow-hidden h-full ${featured ? 'ring-2 ring-primary/20' : ''}`}>
         {/* Product Image */}
         <div className="relative aspect-square overflow-hidden">
@@ -177,6 +174,6 @@ export function ProductCard({ product, featured = false }: ProductCardProps) {
           </div>
         </div>
       </GlassCard>
-    </motion.div>
+          </div>
   )
 }

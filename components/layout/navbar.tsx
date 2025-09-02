@@ -29,7 +29,7 @@ import {
   MessageSquare,
   Shield
 } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+// import { motion, AnimatePresence } from "framer-motion" // Disabled for server compatibility
 import { getInitials } from "@/lib/utils"
 
 export function Navbar() {
@@ -191,15 +191,8 @@ export function Navbar() {
       </div>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden glass border-t border-white/10 dark:border-gray-800/10"
-          >
+      {isMobileMenuOpen && (
+          <div className="md:hidden glass border-t border-white/10 dark:border-gray-800/10">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
                 <Link
@@ -224,9 +217,8 @@ export function Navbar() {
                 </Link>
               ))}
             </div>
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
     </nav>
   )
 }

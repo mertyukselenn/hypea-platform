@@ -3,7 +3,7 @@
 import { ReactNode } from "react"
 import { AdminSidebar } from "./admin-sidebar"
 import { AdminHeader } from "./admin-header"
-import { motion } from "framer-motion"
+// import { motion } from "framer-motion" // Disabled for server compatibility
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -17,14 +17,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <div className="flex-1 flex flex-col">
         <AdminHeader />
         
-        <motion.main 
-          className="flex-1 p-6 overflow-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <main className="flex-1 p-6 overflow-auto">
           {children}
-        </motion.main>
+        </main>
       </div>
     </div>
   )
