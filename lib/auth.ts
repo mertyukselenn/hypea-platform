@@ -101,7 +101,7 @@ export const authOptions: NextAuthOptions = {
                 userId: existingUser.id,
                 avatar: user.image,
                 displayName: user.name,
-                username: profile?.username || user.name?.toLowerCase().replace(/\s+/g, '_')
+                username: (profile as any)?.username || user.name?.toLowerCase().replace(/\s+/g, '_')
               }
             })
 
@@ -119,7 +119,7 @@ export const authOptions: NextAuthOptions = {
                   create: {
                     avatar: user.image,
                     displayName: user.name,
-                    username: profile?.username || user.name?.toLowerCase().replace(/\s+/g, '_')
+                    username: (profile as any)?.username || user.name?.toLowerCase().replace(/\s+/g, '_')
                   }
                 }
               }
