@@ -144,10 +144,9 @@ setup_database() {
     sudo mysql -e "GRANT ALL PRIVILEGES ON hypea_platform.* TO 'hypea_user'@'localhost';"
     sudo mysql -e "FLUSH PRIVILEGES;"
     
-    # Add DATABASE_URL to .env.local
-    echo "" >> .env.local
-    echo "# Database Configuration (Auto-generated)" >> .env.local
-    echo "DATABASE_URL=\"mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform\"" >> .env.local
+    # Update DATABASE_URL in .env.local
+    DB_URL="mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform"
+    sed -i "s|DATABASE_URL=\"mysql://temp:temp@localhost:3306/temp\"|DATABASE_URL=\"$DB_URL\"|g" .env.local
     
     log "Database created: hypea_platform"
     log "Database user: hypea_user"
@@ -173,15 +172,35 @@ clone_repository() {
 setup_environment() {
     log "Setting up environment variables..."
     
-    # Copy example env file
-    cp env.example .env.local
-    
     # Generate NextAuth secret
     NEXTAUTH_SECRET=$(openssl rand -base64 32)
+    SERVER_IP=$(curl -4 icanhazip.com)
     
-    # Update .env.local with generated values
-    sed -i "s|NEXTAUTH_SECRET=\"your-secret-key-here\"|NEXTAUTH_SECRET=\"$NEXTAUTH_SECRET\"|g" .env.local
-    sed -i "s|NEXTAUTH_URL=\"http://localhost:3000\"|NEXTAUTH_URL=\"http://$(curl -4 icanhazip.com):3000\"|g" .env.local
+    # Create .env.local from scratch with essential variables
+    cat > .env.local << EOF
+# Database (will be set by setup_database function)
+DATABASE_URL="mysql://temp:temp@localhost:3306/temp"
+
+# NextAuth.js
+NEXTAUTH_URL="http://$SERVER_IP:3000"
+NEXTAUTH_SECRET="$NEXTAUTH_SECRET"
+
+# Environment
+NODE_ENV="production"
+
+# Discord OAuth (configure these later)
+DISCORD_CLIENT_ID="your-discord-client-id"
+DISCORD_CLIENT_SECRET="your-discord-client-secret"
+
+# SMTP Configuration (configure these later)
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT="587"
+SMTP_SECURE="false"
+SMTP_USER="your-email@gmail.com"
+SMTP_PASSWORD="your-app-password"
+SMTP_FROM_NAME="Hypea Platform"
+SMTP_FROM_EMAIL="noreply@hypea.com"
+EOF
     
     log "Environment variables configured"
     warn "Please edit .env.local to configure Discord, SMTP, and other services"
