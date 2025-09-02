@@ -96,12 +96,12 @@ class MemoryCache {
     const now = Date.now()
     let deletedCount = 0
     
-    for (const [key, entry] of this.cache.entries()) {
+    this.cache.forEach((entry, key) => {
       if (now > entry.expiresAt) {
         this.delete(key)
         deletedCount++
       }
-    }
+    })
     
     return deletedCount
   }
@@ -112,13 +112,13 @@ class MemoryCache {
     let expired = 0
     let active = 0
     
-    for (const entry of this.cache.values()) {
+    this.cache.forEach((entry) => {
       if (now > entry.expiresAt) {
         expired++
       } else {
         active++
       }
-    }
+    })
     
     return {
       total: this.cache.size,
