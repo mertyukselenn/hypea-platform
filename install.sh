@@ -144,13 +144,14 @@ setup_database() {
     sudo mysql -e "GRANT ALL PRIVILEGES ON hypea_platform.* TO 'hypea_user'@'localhost';"
     sudo mysql -e "FLUSH PRIVILEGES;"
     
-    # Update DATABASE_URL in existing .env.local
-    DB_URL="mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform"
-    sed -i "s|DATABASE_URL=\"mysql://username:password@localhost:3306/hypea_platform\"|DATABASE_URL=\"$DB_URL\"|g" .env.local
+    # Add DATABASE_URL to .env.local
+    echo "" >> .env.local
+    echo "# Database Configuration (Auto-generated)" >> .env.local
+    echo "DATABASE_URL=\"mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform\"" >> .env.local
     
     log "Database created: hypea_platform"
     log "Database user: hypea_user"
-    log "Database URL updated in .env.local"
+    log "Database URL added to .env.local"
 }
 
 # Clone repository
