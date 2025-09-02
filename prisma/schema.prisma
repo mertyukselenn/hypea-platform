@@ -1,0 +1,497 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// NextAuth.js Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// User Management
+enum UserRole {
+  OWNER
+  ADMIN
+  STAFF
+  MEMBER
+}
+
+enum UserStatus {
+  ACTIVE
+  BANNED
+  DISABLED
+  PENDING_VERIFICATION
+}
+
+model User {
+  id            String     @id @default(cuid())
+  email         String?    @unique
+  emailVerified DateTime?
+  discordId     String?    @unique
+  passwordHash  String?
+  role          UserRole   @default(MEMBER)
+  status        UserStatus @default(PENDING_VERIFICATION)
+  
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  userTeamTags  UserTeamTag[]
+  orders        Order[]
+  licenses      License[]
+  formSubmissions FormSubmission[]
+  auditLogs     AuditLog[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Profile {
+  id          String  @id @default(cuid())
+  userId      String  @unique
+  username    String? @unique
+  displayName String?
+  avatar      String?
+  bio         String? @db.Text
+  website     String?
+  location    String?
+  badges      String? @db.Json // Array of badge IDs
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Team Management
+model TeamTag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  displayName String
+  color       String   @default("#6366f1")
+  icon        String?
+  description String?  @db.Text
+  permissions String?  @db.Json // Array of permissions
+  priority    Int      @default(0)
+  isVisible   Boolean  @default(true)
+  
+  userTeamTags UserTeamTag[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserTeamTag {
+  id        String @id @default(cuid())
+  userId    String
+  teamTagId String
+  
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  teamTag TeamTag @relation(fields: [teamTagId], references: [id], onDelete: Cascade)
+  
+  assignedAt DateTime @default(now())
+  
+  @@unique([userId, teamTagId])
+}
+
+// News & Announcements
+enum NewsStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model News {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  content     String     @db.Text
+  excerpt     String?    @db.Text
+  coverImage  String?
+  status      NewsStatus @default(DRAFT)
+  featured    Boolean    @default(false)
+  tags        String?    @db.Json // Array of tags
+  authorId    String
+  publishedAt DateTime?
+  
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([status, publishedAt])
+  @@index([slug])
+}
+
+// Form Builder
+model Form {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  fields      String   @db.Json // Form field definitions
+  settings    String?  @db.Json // Form settings (Discord webhook, email notifications, etc.)
+  isActive    Boolean  @default(true)
+  
+  submissions FormSubmission[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FormSubmission {
+  id       String @id @default(cuid())
+  formId   String
+  userId   String?
+  data     String @db.Json // Submitted form data
+  ipAddress String?
+  userAgent String? @db.Text
+  
+  form Form  @relation(fields: [formId], references: [id], onDelete: Cascade)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+}
+
+// E-commerce
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?   @db.Text
+  image       String?
+  parentId    String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+  products Product[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  OUT_OF_STOCK
+}
+
+enum ProductType {
+  DIGITAL
+  PHYSICAL
+  SERVICE
+  LICENSE
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String?       @db.Text
+  shortDescription String?  @db.Text
+  images      String?       @db.Json // Array of image URLs
+  price       Decimal       @db.Decimal(10, 2)
+  comparePrice Decimal?     @db.Decimal(10, 2)
+  cost        Decimal?      @db.Decimal(10, 2)
+  sku         String?       @unique
+  barcode     String?
+  trackQuantity Boolean     @default(false)
+  quantity    Int           @default(0)
+  weight      Float?
+  status      ProductStatus @default(DRAFT)
+  type        ProductType   @default(DIGITAL)
+  categoryId  String?
+  tags        String?       @db.Json // Array of tags
+  seoTitle    String?
+  seoDescription String?    @db.Text
+  
+  // License-specific fields
+  licenseTemplate String? @db.Text
+  licenseDuration Int?    // Duration in days, null for lifetime
+  maxActivations  Int?    // Max activations, null for unlimited
+  
+  category   Category?   @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+  licenses   License[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([status, createdAt])
+  @@index([slug])
+}
+
+model Coupon {
+  id               String   @id @default(cuid())
+  code             String   @unique
+  name             String
+  description      String?  @db.Text
+  type             String   // PERCENTAGE, FIXED_AMOUNT, FREE_SHIPPING
+  value            Decimal  @db.Decimal(10, 2)
+  minimumAmount    Decimal? @db.Decimal(10, 2)
+  maximumDiscount  Decimal? @db.Decimal(10, 2)
+  usageLimit       Int?
+  usageCount       Int      @default(0)
+  userLimit        Int?     // Per user usage limit
+  isActive         Boolean  @default(true)
+  startsAt         DateTime?
+  expiresAt        DateTime?
+  
+  orders Order[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  orderNumber     String        @unique
+  userId          String
+  email           String
+  firstName       String
+  lastName        String
+  phone           String?
+  
+  // Pricing
+  subtotal        Decimal       @db.Decimal(10, 2)
+  taxAmount       Decimal       @db.Decimal(10, 2) @default(0)
+  shippingAmount  Decimal       @db.Decimal(10, 2) @default(0)
+  discountAmount  Decimal       @db.Decimal(10, 2) @default(0)
+  total           Decimal       @db.Decimal(10, 2)
+  
+  // Status
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // Payment
+  paymentMethod   String?
+  paymentId       String?       // Shopier payment ID
+  transactionId   String?
+  
+  // Coupon
+  couponId        String?
+  couponCode      String?
+  
+  // Metadata
+  notes           String?       @db.Text
+  metadata        String?       @db.Json
+  
+  user     User        @relation(fields: [userId], references: [id])
+  coupon   Coupon?     @relation(fields: [couponId], references: [id])
+  items    OrderItem[]
+  licenses License[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  productId    String
+  quantity     Int
+  price        Decimal @db.Decimal(10, 2)
+  total        Decimal @db.Decimal(10, 2)
+  productName  String  // Snapshot of product name
+  productImage String? // Snapshot of product image
+  metadata     String? @db.Json
+  
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+  
+  createdAt DateTime @default(now())
+}
+
+enum LicenseStatus {
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+  REVOKED
+}
+
+model License {
+  id              String        @id @default(cuid())
+  key             String        @unique
+  userId          String
+  orderId         String?
+  productId       String
+  status          LicenseStatus @default(ACTIVE)
+  activations     Int           @default(0)
+  maxActivations  Int?
+  expiresAt       DateTime?
+  lastUsedAt      DateTime?
+  lastUsedIp      String?
+  metadata        String?       @db.Json
+  
+  user    User     @relation(fields: [userId], references: [id])
+  order   Order?   @relation(fields: [orderId], references: [id])
+  product Product  @relation(fields: [productId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId, status])
+  @@index([key])
+}
+
+// Webhooks & Events
+enum WebhookEventType {
+  ORDER_CREATED
+  ORDER_COMPLETED
+  ORDER_CANCELLED
+  PAYMENT_COMPLETED
+  PAYMENT_FAILED
+  LICENSE_CREATED
+  LICENSE_ACTIVATED
+  USER_REGISTERED
+  FORM_SUBMITTED
+}
+
+enum WebhookStatus {
+  PENDING
+  DELIVERED
+  FAILED
+  CANCELLED
+}
+
+model WebhookEvent {
+  id          String             @id @default(cuid())
+  type        WebhookEventType
+  payload     String             @db.Json
+  status      WebhookStatus      @default(PENDING)
+  attempts    Int                @default(0)
+  maxAttempts Int                @default(3)
+  nextAttempt DateTime?
+  response    String?            @db.Text
+  metadata    String?            @db.Json
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([status, nextAttempt])
+}
+
+// Site Configuration
+model SiteTheme {
+  id            String  @id @default(cuid())
+  name          String  @unique
+  displayName   String
+  colors        String  @db.Json // Color scheme
+  fonts         String  @db.Json // Font configuration
+  logo          String?
+  favicon       String?
+  customCss     String? @db.Text
+  customJs      String? @db.Text
+  isActive      Boolean @default(false)
+  isDefault     Boolean @default(false)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteConfig {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+  type  String @default("string") // string, number, boolean, json
+  
+  updatedAt DateTime @updatedAt
+}
+
+// Audit Logging
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  PASSWORD_CHANGE
+  ROLE_CHANGE
+  STATUS_CHANGE
+  PAYMENT
+  LICENSE_GENERATE
+  FORM_SUBMIT
+  THEME_CHANGE
+  CONFIG_CHANGE
+}
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  userId      String?
+  action      AuditAction
+  resource    String      // Table/resource name
+  resourceId  String?     // ID of the affected resource
+  oldValues   String?     @db.Json
+  newValues   String?     @db.Json
+  ipAddress   String?
+  userAgent   String?     @db.Text
+  metadata    String?     @db.Json
+  
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([resource, resourceId])
+}
