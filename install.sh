@@ -131,8 +131,8 @@ install_git() {
     log "Git installed"
 }
 
-# Setup database with environment
-setup_database_with_env() {
+# Setup database
+setup_database() {
     log "Setting up MySQL database..."
     
     # Generate random password
@@ -412,7 +412,7 @@ main() {
     setup_environment
     
     # Setup database (after environment is ready)
-    setup_database_with_env
+    setup_database
     
     install_dependencies
     setup_schema
