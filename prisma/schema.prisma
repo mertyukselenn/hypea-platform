@@ -424,7 +424,7 @@ model WebhookEvent {
   maxAttempts Int                @default(3)
   nextAttempt DateTime?
   response    String?            @db.Text
-  metadata    String?            @db.Json
+  metadata    Json?
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
