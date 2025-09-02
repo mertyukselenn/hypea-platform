@@ -145,7 +145,7 @@ setup_database() {
     sudo mysql -e "FLUSH PRIVILEGES;"
     
     # Store database credentials
-    echo "DATABASE_URL=\"mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform\"" > .env.local
+    echo "DATABASE_URL=\"mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform\"" >> .env.local
     
     log "Database created: hypea_platform"
     log "Database user: hypea_user"
@@ -179,7 +179,7 @@ setup_environment() {
     
     # Update .env.local with generated values
     sed -i "s|NEXTAUTH_SECRET=\"your-secret-key-here\"|NEXTAUTH_SECRET=\"$NEXTAUTH_SECRET\"|g" .env.local
-    sed -i "s|NEXTAUTH_URL=\"http://localhost:3000\"|NEXTAUTH_URL=\"http://$(hostname -I | awk '{print $1}'):3000\"|g" .env.local
+    sed -i "s|NEXTAUTH_URL=\"http://localhost:3000\"|NEXTAUTH_URL=\"http://$(curl -4 icanhazip.com):3000\"|g" .env.local
     
     log "Environment variables configured"
     warn "Please edit .env.local to configure Discord, SMTP, and other services"
@@ -189,7 +189,7 @@ setup_environment() {
 install_dependencies() {
     log "Installing Node.js dependencies..."
     
-    npm ci --only=production
+    npm install --only=production
     
     log "Dependencies installed"
 }
