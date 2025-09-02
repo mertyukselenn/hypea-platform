@@ -131,8 +131,8 @@ install_git() {
     log "Git installed"
 }
 
-# Setup database
-setup_database() {
+# Setup database with environment
+setup_database_with_env() {
     log "Setting up MySQL database..."
     
     # Generate random password
@@ -144,12 +144,13 @@ setup_database() {
     sudo mysql -e "GRANT ALL PRIVILEGES ON hypea_platform.* TO 'hypea_user'@'localhost';"
     sudo mysql -e "FLUSH PRIVILEGES;"
     
-    # Store database credentials in .env.local (will be created in setup_environment)
+    # Update DATABASE_URL in existing .env.local
     DB_URL="mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform"
+    sed -i "s|DATABASE_URL=\"mysql://username:password@localhost:3306/hypea_platform\"|DATABASE_URL=\"$DB_URL\"|g" .env.local
     
     log "Database created: hypea_platform"
     log "Database user: hypea_user"
-    warn "Database password saved to .env.local"
+    log "Database URL updated in .env.local"
 }
 
 # Clone repository
@@ -178,7 +179,6 @@ setup_environment() {
     NEXTAUTH_SECRET=$(openssl rand -base64 32)
     
     # Update .env.local with generated values
-    sed -i "s|DATABASE_URL=\"mysql://username:password@localhost:3306/hypea_platform\"|DATABASE_URL=\"$DB_URL\"|g" .env.local
     sed -i "s|NEXTAUTH_SECRET=\"your-secret-key-here\"|NEXTAUTH_SECRET=\"$NEXTAUTH_SECRET\"|g" .env.local
     sed -i "s|NEXTAUTH_URL=\"http://localhost:3000\"|NEXTAUTH_URL=\"http://$(curl -4 icanhazip.com):3000\"|g" .env.local
     
@@ -409,12 +409,11 @@ main() {
     
     # Setup application
     clone_repository
-    
-    # Setup database
-    setup_database
-    
-    # Setup environment
     setup_environment
+    
+    # Setup database (after environment is ready)
+    setup_database_with_env
+    
     install_dependencies
     setup_schema
     build_application
