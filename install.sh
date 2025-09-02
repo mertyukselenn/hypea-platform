@@ -150,7 +150,7 @@ setup_database() {
     
     log "Database created: hypea_platform"
     log "Database user: hypea_user"
-    log "Database URL added to .env.local"
+    log "Database URL added to .env"
 }
 
 # Clone repository
@@ -203,7 +203,7 @@ SMTP_FROM_EMAIL="noreply@hypea.com"
 EOF
     
     log "Environment variables configured"
-    warn "Please edit .env.local to configure Discord, SMTP, and other services"
+    warn "Please edit .env to configure Discord, SMTP, and other services"
 }
 
 # Install dependencies
