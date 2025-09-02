@@ -79,6 +79,7 @@ model User {
   licenses      License[]
   formSubmissions FormSubmission[]
   auditLogs     AuditLog[]
+  news          News[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -93,7 +94,7 @@ model Profile {
   bio         String? @db.Text
   website     String?
   location    String?
-  badges      String? @db.Json // Array of badge IDs
+  badges      Json? // Array of badge IDs
   
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   
@@ -109,7 +110,7 @@ model TeamTag {
   color       String   @default("#6366f1")
   icon        String?
   description String?  @db.Text
-  permissions String?  @db.Json // Array of permissions
+  permissions Json? // Array of permissions
   priority    Int      @default(0)
   isVisible   Boolean  @default(true)
   
@@ -148,7 +149,7 @@ model News {
   coverImage  String?
   status      NewsStatus @default(DRAFT)
   featured    Boolean    @default(false)
-  tags        String?    @db.Json // Array of tags
+  tags        Json? // Array of tags
   authorId    String
   publishedAt DateTime?
   
@@ -166,8 +167,8 @@ model Form {
   id          String   @id @default(cuid())
   title       String
   description String?  @db.Text
-  fields      String   @db.Json // Form field definitions
-  settings    String?  @db.Json // Form settings (Discord webhook, email notifications, etc.)
+  fields      Json // Form field definitions
+  settings    Json? // Form settings (Discord webhook, email notifications, etc.)
   isActive    Boolean  @default(true)
   
   submissions FormSubmission[]
@@ -180,7 +181,7 @@ model FormSubmission {
   id       String @id @default(cuid())
   formId   String
   userId   String?
-  data     String @db.Json // Submitted form data
+  data     Json // Submitted form data
   ipAddress String?
   userAgent String? @db.Text
   
@@ -229,7 +230,7 @@ model Product {
   slug        String        @unique
   description String?       @db.Text
   shortDescription String?  @db.Text
-  images      String?       @db.Json // Array of image URLs
+  images      Json? // Array of image URLs
   price       Decimal       @db.Decimal(10, 2)
   comparePrice Decimal?     @db.Decimal(10, 2)
   cost        Decimal?      @db.Decimal(10, 2)
@@ -241,7 +242,7 @@ model Product {
   status      ProductStatus @default(DRAFT)
   type        ProductType   @default(DIGITAL)
   categoryId  String?
-  tags        String?       @db.Json // Array of tags
+  tags        Json? // Array of tags
   seoTitle    String?
   seoDescription String?    @db.Text
   
@@ -331,7 +332,7 @@ model Order {
   
   // Metadata
   notes           String?       @db.Text
-  metadata        String?       @db.Json
+  metadata        Json?
   
   user     User        @relation(fields: [userId], references: [id])
   coupon   Coupon?     @relation(fields: [couponId], references: [id])
@@ -354,7 +355,7 @@ model OrderItem {
   total        Decimal @db.Decimal(10, 2)
   productName  String  // Snapshot of product name
   productImage String? // Snapshot of product image
-  metadata     String? @db.Json
+  metadata     Json?
   
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id])
@@ -381,7 +382,7 @@ model License {
   expiresAt       DateTime?
   lastUsedAt      DateTime?
   lastUsedIp      String?
-  metadata        String?       @db.Json
+  metadata        Json?
   
   user    User     @relation(fields: [userId], references: [id])
   order   Order?   @relation(fields: [orderId], references: [id])
@@ -417,7 +418,7 @@ enum WebhookStatus {
 model WebhookEvent {
   id          String             @id @default(cuid())
   type        WebhookEventType
-  payload     String             @db.Json
+  payload     Json
   status      WebhookStatus      @default(PENDING)
   attempts    Int                @default(0)
   maxAttempts Int                @default(3)
@@ -436,8 +437,8 @@ model SiteTheme {
   id            String  @id @default(cuid())
   name          String  @unique
   displayName   String
-  colors        String  @db.Json // Color scheme
-  fonts         String  @db.Json // Font configuration
+  colors        Json // Color scheme
+  fonts         Json // Font configuration
   logo          String?
   favicon       String?
   customCss     String? @db.Text
@@ -481,11 +482,11 @@ model AuditLog {
   action      AuditAction
   resource    String      // Table/resource name
   resourceId  String?     // ID of the affected resource
-  oldValues   String?     @db.Json
-  newValues   String?     @db.Json
+  oldValues   Json?
+  newValues   Json?
   ipAddress   String?
   userAgent   String?     @db.Text
-  metadata    String?     @db.Json
+  metadata    Json?
   
   user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
   
