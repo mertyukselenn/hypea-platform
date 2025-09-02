@@ -191,6 +191,11 @@ setup_environment() {
 install_dependencies() {
     log "Installing Node.js dependencies..."
     
+    # Make sure .env.local exists and has DATABASE_URL
+    if ! grep -q "DATABASE_URL" .env.local; then
+        error "DATABASE_URL not found in .env.local"
+    fi
+    
     npm install --only=production
     
     log "Dependencies installed"
@@ -411,10 +416,7 @@ main() {
     # Setup application
     clone_repository
     setup_environment
-    
-    # Setup database (after environment is ready)
     setup_database
-    
     install_dependencies
     setup_schema
     build_application
