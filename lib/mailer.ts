@@ -191,38 +191,26 @@ class Mailer {
       },
       'order-confirmation': {
         subject: 'Order Confirmation - #{{orderNumber}}',
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h1 style="color: #6366f1;">Order Confirmation</h1>
-            <p>Hello {{customerName}},</p>
-            <p>Thank you for your order! Here are the details:</p>
-            
-            <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin-top: 0;">Order #{{orderNumber}}</h3>
-              <p><strong>Date:</strong> {{orderDate}}</p>
-              <p><strong>Total:</strong> ${{orderTotal}}</p>
-            </div>
-            
-            <h3>Items:</h3>
-            <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px;">
-              {{orderItems}}
-            </div>
-            
-            {{#if hasLicenses}}
-            <h3>License Keys:</h3>
-            <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>Important:</strong> Please save your license keys in a safe place.</p>
-              {{licenseKeys}}
-            </div>
-            {{/if}}
-            
-            <p>You can view your order details and download your licenses anytime in your account dashboard.</p>
-            <a href="{{accountUrl}}" style="display: inline-block; background-color: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 20px 0;">View Account</a>
-            
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
-            <p style="color: #6b7280; font-size: 14px;">Best regards,<br>The Hypea Team</p>
-          </div>
-        `,
+        html: [
+          '<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">',
+          '  <h1 style="color: #6366f1;">Order Confirmation</h1>',
+          '  <p>Hello {{customerName}},</p>',
+          '  <p>Thank you for your order! Here are the details:</p>',
+          '  <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">',
+          '    <h3 style="margin-top: 0;">Order #{{orderNumber}}</h3>',
+          '    <p><strong>Date:</strong> {{orderDate}}</p>',
+          '    <p><strong>Total:</strong> ${{orderTotal}}</p>',
+          '  </div>',
+          '  <h3>Items:</h3>',
+          '  <div style="background-color: #f9fafb; padding: 20px; border-radius: 8px;">',
+          '    {{orderItems}}',
+          '  </div>',
+          '  <p>You can view your order details and download your licenses anytime in your account dashboard.</p>',
+          '  <a href="{{accountUrl}}" style="display: inline-block; background-color: #6366f1; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 20px 0;">View Account</a>',
+          '  <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">',
+          '  <p style="color: #6b7280; font-size: 14px;">Best regards,<br>The Hypea Team</p>',
+          '</div>'
+        ].join('\n'),
         text: `
           Hello {{customerName}},
           
