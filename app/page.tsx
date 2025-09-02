@@ -15,7 +15,6 @@ import {
   TrendingUp,
   Award
 } from "lucide-react"
-import { motion } from "framer-motion"
 
 const features = [
   {
@@ -41,18 +40,6 @@ const features = [
     title: "Advanced Security",
     description: "Enterprise-grade security with role-based access control and audit logging.",
     color: "text-orange-600 dark:text-orange-400"
-  },
-  {
-    icon: Zap,
-    title: "Lightning Fast",
-    description: "Built with Next.js 14 for optimal performance and user experience.",
-    color: "text-yellow-600 dark:text-yellow-400"
-  },
-  {
-    icon: Globe,
-    title: "Multi-Language",
-    description: "Support for multiple languages with internationalization built-in.",
-    color: "text-indigo-600 dark:text-indigo-400"
   }
 ]
 
@@ -71,33 +58,18 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-600/10" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <motion.h1 
-              className="text-4xl md:text-6xl lg:text-7xl font-bold gradient-text mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold gradient-text mb-6">
               Modern Platform for
               <br />
               Community & Commerce
-            </motion.h1>
+            </h1>
             
-            <motion.p 
-              className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               Hypea combines community management with e-commerce in one powerful platform. 
               Build your community, sell your products, and manage everything from a single dashboard.
-            </motion.p>
+            </p>
             
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" variant="gradient" asChild>
                 <Link href="/auth/signup">
                   Get Started Free
@@ -109,7 +81,7 @@ export default function HomePage() {
                   Explore Store
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -119,19 +91,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
+              <div key={stat.label} className="text-center">
                 <stat.icon className="h-8 w-8 mx-auto mb-2 text-primary" />
                 <div className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">
                   {stat.value}
                 </div>
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -149,98 +115,63 @@ export default function HomePage() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
+              <div key={feature.title}>
                 <GlassCard className="h-full p-6 hover:shadow-xl transition-shadow">
                   <feature.icon className={`h-12 w-12 mb-4 ${feature.color}`} />
                   <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
                 </GlassCard>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-purple-600">
+      {/* Success Message */}
+      <section className="py-20 bg-gradient-to-r from-green-500 to-emerald-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to Get Started?
+              🎉 Platform Successfully Installed!
             </h2>
             <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Join thousands of communities and businesses already using Hypea to grow their success.
+              Your Hypea Platform is now running with all core features ready to use.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
+              <div className="bg-white/10 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-white mb-4">✅ Installed Features</h3>
+                <ul className="text-white/90 space-y-2">
+                  <li>• Next.js 14 + TypeScript</li>
+                  <li>• MySQL Database + Prisma ORM</li>
+                  <li>• NextAuth Authentication</li>
+                  <li>• Admin Panel + User Management</li>
+                  <li>• E-commerce Store System</li>
+                  <li>• Discord Integration</li>
+                  <li>• Email System (SMTP)</li>
+                  <li>• Modern UI with Glassmorphism</li>
+                </ul>
+              </div>
+              <div className="bg-white/10 rounded-lg p-6">
+                <h3 className="text-xl font-bold text-white mb-4">🔑 Admin Access</h3>
+                <div className="text-white/90 space-y-2">
+                  <p><strong>Admin Panel:</strong> <a href="/admin" className="text-yellow-300 hover:underline">/admin</a></p>
+                  <p><strong>Email:</strong> admin@hypea.com</p>
+                  <p><strong>Password:</strong> admin123</p>
+                  <hr className="my-4 border-white/20" />
+                  <p className="text-sm">⚠️ Change default password immediately!</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-8">
               <Button size="lg" variant="secondary" asChild>
-                <Link href="/auth/signup">
-                  Start Your Free Trial
+                <Link href="/admin">
+                  Access Admin Panel
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20" asChild>
-                <Link href="/contact">
-                  Contact Sales
-                </Link>
-              </Button>
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold gradient-text mb-4">
-              Loved by Communities
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              See what our users have to say about Hypea
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-              >
-                <GlassCard className="p-6">
-                  <div className="flex items-center mb-4">
-                    {[...Array(5)].map((_, index) => (
-                      <Star key={index} className="h-5 w-5 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-4">
-                    "Hypea has transformed how we manage our community and sell our products. 
-                    The integration with Discord is seamless and the admin panel is incredibly powerful."
-                  </p>
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                      U{i}
-                    </div>
-                    <div>
-                      <div className="font-semibold">User {i}</div>
-                      <div className="text-sm text-muted-foreground">Community Manager</div>
-                    </div>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
