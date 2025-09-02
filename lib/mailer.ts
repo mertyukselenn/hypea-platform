@@ -35,7 +35,7 @@ class Mailer {
       return
     }
 
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: config.smtp_host,
       port: parseInt(config.smtp_port),
       secure: config.smtp_secure === 'true',
