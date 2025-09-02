@@ -210,9 +210,9 @@ EOF
 install_dependencies() {
     log "Installing Node.js dependencies..."
     
-    # Make sure .env.local exists and has DATABASE_URL
-    if ! grep -q "DATABASE_URL" .env.local; then
-        error "DATABASE_URL not found in .env.local"
+    # Make sure .env exists and has DATABASE_URL
+    if ! grep -q "DATABASE_URL" .env; then
+        error "DATABASE_URL not found in .env"
     fi
     
     npm install --only=production
