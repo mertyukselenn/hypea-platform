@@ -12,7 +12,7 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "echo 'Skipping prisma generate - will run manually after env setup'"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.4.0",

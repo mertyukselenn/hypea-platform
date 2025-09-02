@@ -205,6 +205,12 @@ install_dependencies() {
 setup_schema() {
     log "Setting up database schema..."
     
+    # Make sure DATABASE_URL exists
+    if ! grep -q "DATABASE_URL" .env.local; then
+        error "DATABASE_URL not found in .env.local"
+    fi
+    
+    # Generate Prisma client (manual since we disabled postinstall)
     npx prisma generate
     npx prisma db push
     npx prisma db seed
