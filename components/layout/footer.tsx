@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Heart, Github, Twitter, Discord } from "lucide-react"
+import { Heart, Github, Twitter } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -34,7 +34,6 @@ export function Footer() {
   }
 
   const socialLinks = [
-    { name: 'Discord', href: '#', icon: Discord },
     { name: 'Twitter', href: '#', icon: Twitter },
     { name: 'GitHub', href: '#', icon: Github },
   ]
