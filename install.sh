@@ -144,9 +144,9 @@ setup_database() {
     sudo mysql -e "GRANT ALL PRIVILEGES ON hypea_platform.* TO 'hypea_user'@'localhost';"
     sudo mysql -e "FLUSH PRIVILEGES;"
     
-    # Update DATABASE_URL in .env.local
+    # Update DATABASE_URL in .env file
     DB_URL="mysql://hypea_user:$DB_PASSWORD@localhost:3306/hypea_platform"
-    sed -i "s|DATABASE_URL=\"mysql://temp:temp@localhost:3306/temp\"|DATABASE_URL=\"$DB_URL\"|g" .env.local
+    sed -i "s|DATABASE_URL=\"mysql://temp:temp@localhost:3306/temp\"|DATABASE_URL=\"$DB_URL\"|g" .env
     
     log "Database created: hypea_platform"
     log "Database user: hypea_user"
@@ -176,8 +176,8 @@ setup_environment() {
     NEXTAUTH_SECRET=$(openssl rand -base64 32)
     SERVER_IP=$(curl -4 icanhazip.com)
     
-    # Create .env.local from scratch with essential variables
-    cat > .env.local << EOF
+    # Create .env file (Prisma reads .env by default)
+    cat > .env << EOF
 # Database (will be set by setup_database function)
 DATABASE_URL="mysql://temp:temp@localhost:3306/temp"
 
@@ -225,8 +225,8 @@ setup_schema() {
     log "Setting up database schema..."
     
     # Make sure DATABASE_URL exists
-    if ! grep -q "DATABASE_URL" .env.local; then
-        error "DATABASE_URL not found in .env.local"
+    if ! grep -q "DATABASE_URL" .env; then
+        error "DATABASE_URL not found in .env"
     fi
     
     # Generate Prisma client (manual since we disabled postinstall)
